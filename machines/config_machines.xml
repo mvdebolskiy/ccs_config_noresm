@@ -3736,7 +3736,7 @@ This allows using a different mpirun command to launch unit tests
       <executable></executable>
     </mpirun>
     <mpirun mpilib="impi">
-      <executable>mpirun</executable>
+      <executable>srun</executable>
     </mpirun>
     <module_system type="module">
       <init_path lang="perl">$ENV{LMOD_PKG}/init/perl</init_path>
@@ -3751,7 +3751,7 @@ This allows using a different mpirun command to launch unit tests
         <command name="--force purge"></command>
         <command name="load">StdEnv</command>
         <command name="use">/cluster/shared/noresm/eb_mods/modules/all</command>
-        <command name="load">ESMF/8.4.1-intel-2021b-ParallelIO-2.5.10</command>
+        <command name="load">ESMF/8.4.1-intel-2021b</command>
         <command name="load">CMake/3.21.1-GCCcore-11.2.0</command>
         <command name="load">Python/3.9.6-GCCcore-11.2.0</command>
         <command name="load">ParMETIS/4.0.3-iimpi-2021b</command>
@@ -3765,10 +3765,6 @@ This allows using a different mpirun command to launch unit tests
       <env name="ESMF_LIBDIR">$ENV{EBROOTESMF}/lib</env>
       <env name="ESMF_RUNTIME_PROFILE">ON</env>
       <env name="ESMF_RUNTIME_PROFILE_OUTPUT">SUMMARY</env>
-      <env name="PIO_VERSION_MAJOR">2</env>
-      <env name="PIO_LIBDIR">$ENV{EBROOTPARALLELIO}/lib</env>
-      <env name="PIO_INCDIR">$ENV{EBROOTPARALLELIO}/include</env>
-      <env name="PIO_TYPENAME_VALID_VALUES">pnetcdf,netcdf,netcdf4p,netcdf4c</env>
     </environment_variables>
     <resource_limits>
       <resource name="RLIMIT_STACK">-1</resource>
