@@ -1,14 +1,14 @@
 <machine MACH="betzy">
   <DESC> BullSequana XH2000 AMD® Epyc™ "Rome" 2.2GHz, 128-way nodes, os is Linux, batch system is SLURM</DESC>
   <OS>LINUX</OS>
-  <COMPILERS>intel-oneapi,intel</COMPILERS>
-  <MPILIBS>openmpi,impi</MPILIBS>
+  <COMPILERS>intel</COMPILERS>
+  <MPILIBS>openmpi</MPILIBS>
   <CIME_OUTPUT_ROOT>/cluster/work/users/$USER/noresm</CIME_OUTPUT_ROOT>
   <DIN_LOC_ROOT>/cluster/shared/noresm/inputdata</DIN_LOC_ROOT>
   <DIN_LOC_ROOT_CLMFORC>/cluster/shared/noresm/inputdata/atm/datm7</DIN_LOC_ROOT_CLMFORC>
   <DOUT_S_ROOT>/cluster/work/users/$USER/archive/$CASE</DOUT_S_ROOT>
   <BASELINE_ROOT> /cluster/shared/noresm/noresm_baselines</BASELINE_ROOT>
-  <CCSM_CPRNC>/cluster/shared/noresm/tools/cprnc/cprnc</CCSM_CPRNC>
+  <CCSM_CPRNC>/cluster/shared/noresm/tools/cprnc-iompi-2023b/bin/cprnc</CCSM_CPRNC>
   <GMAKE_J>8</GMAKE_J>
   <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
   <SUPPORTED_BY>noresmCommunity</SUPPORTED_BY>
@@ -18,8 +18,8 @@
   <mpirun mpilib="mpi-serial">
     <executable></executable>
   </mpirun>
-  <mpirun mpilib="default">
-    <executable>srun</executable>
+  <mpirun mpilib="openmpi">
+    <executable>srun --kill-on-bad-exit --label</executable>
   </mpirun>
   <module_system type="module" allow_error="true">
     <init_path lang="perl">$ENV{LMOD_PKG}/init/perl</init_path>
@@ -30,38 +30,16 @@
     <cmd_path lang="python">$ENV{LMOD_PKG}/libexec/lmod python</cmd_path>
     <cmd_path lang="sh">module</cmd_path>
     <cmd_path lang="csh">module</cmd_path>
-    <modules compiler="intel-oneapi" mpilib='openmpi'>
+    <modules compiler="intel" mpilib='openmpi'>
       <command name="--force purge"></command>
       <command name="load">StdEnv</command>
-      <command name="load">git/2.41.0-GCCcore-12.3.0-nodocs</command>
-      <command name="use">/cluster/shared/noresm/eb_mods/modules/all</command>
-      <command name="load">ESMF/8.4.2-iomkl-2022a-ParallelIO-2.5.10</command>
-      <command name="load">Python/3.11.3-GCCcore-12.3.0</command>
-      <command name="load">CMake/3.26.3-GCCcore-12.3.0</command>
-      <command name="load">ParMETIS/4.0.3-iompi-2022a</command>
-      <command name="load">XML-LibXML/2.0209-GCCcore-12.3.0</command>
-    </modules>
-    <modules compiler="intel" mpilib="openmpi">
-      <command name="--force purge"></command>
-      <command name="load">StdEnv</command>
-      <command name="load">git/2.41.0-GCCcore-12.3.0-nodocs</command>
-      <command name="use">/cluster/shared/noresm/eb_mods/modules/all</command>
-      <command name="load">ESMF/8.4.1-iomkl-2021b-ParallelIO-2.5.10</command>
-      <command name="load">CMake/3.21.1-GCCcore-11.2.0</command>
-      <command name="load">Python/3.9.6-GCCcore-11.2.0</command>
-      <command name="load">ParMETIS/4.0.3-iompi-2021b</command>
-      <command name="load">XML-LibXML/2.0209-GCCcore-12.3.0</command>
-    </modules>
-    <modules compiler="intel" mpilib="impi">
-      <command name="--force purge"></command>
-      <command name="load">StdEnv</command>
-      <command name="load">git/2.41.0-GCCcore-12.3.0-nodocs</command>
-      <command name="use">/cluster/shared/noresm/eb_mods/modules/all</command>
-      <command name="load">ESMF/8.4.1-intel-2021b-ParallelIO-2.5.10</command>
-      <command name="load">CMake/3.21.1-GCCcore-11.2.0</command>
-      <command name="load">Python/3.9.6-GCCcore-11.2.0</command>
-      <command name="load">ParMETIS/4.0.3-iimpi-2021b</command>
-      <command name="load">XML-LibXML/2.0209-GCCcore-12.3.0</command>
+      <command name="use">/cluster/shared/noresm/eb_mods_2023b/modules/all</command>
+      <command name="load">git/2.42.0-GCCcore-13.2.0</command>
+      <command name="load">ESMF/8.6.1-iomkl-2023b</command>
+      <command name="load">ParMETIS/4.0.3-iompi-2023b</command>
+      <command name="load">Python/3.11.5-GCCcore-13.2.0</command>
+      <command name="load">CMake/3.27.6-GCCcore-13.2.0</command>
+      <command name="load">XML-LibXML/2.0210-GCCcore-13.2.0</command>
     </modules>
   </module_system>
   <environment_variables>
@@ -71,9 +49,6 @@
     <env name="HCOLL_MAIN_IB">mlx5_0:1</env>
     <env name="KMP_STACKSIZE">64M</env>
     <env name="MKL_DEBUG_CPU_TYPE">5</env>
-    <env name="PIO_VERSION_MAJOR">2</env>
-    <env name="PIO_LIBDIR">$ENV{EBROOTPARALLELIO}/lib</env>
-    <env name="PIO_INCDIR">$ENV{EBROOTPARALLELIO}/include</env>
     <env name="PIO_TYPENAME_VALID_VALUES">pnetcdf,netcdf,netcdf4p,netcdf4c</env>
     <env name="OMPI_MCA_mpi_leave_pinned">1</env>
     <env name="OMPI_MCA_btl">self,vader</env>
